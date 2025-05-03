@@ -1,28 +1,29 @@
-const pool = require('../config/db.js');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db.js'); // ✅ instance, not the class
 
+const User = sequelize.define('User', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'user',
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-const createUser = async ({ name, email, password_hash, address, role }) => {
-  try {
-    const res = await pool.query(
-      'INSERT INTO users (name, email, password_hash, address, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, email, password_hash, address, role]
-    );
-    return res.rows[0];
-  } catch (err) {
-    console.error('Error creating user:', err.message); 
-    throw new Error('Error creating user');
-  }
-};
-
-
-const findUserByEmail = async (email) => {
-  try {
-    const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    return res.rows[0]; 
-  } catch (err) {
-    console.error('Error finding user by email:', err.message); 
-    throw new Error('Error finding user');
-  }
-};
-
-module.exports = { createUser, findUserByEmail };
+module.exports = User;
