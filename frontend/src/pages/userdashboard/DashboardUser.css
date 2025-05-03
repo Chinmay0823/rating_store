@@ -1,0 +1,62 @@
+.user-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .store-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .store-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    width: 220px;
+    background-color: #f9f9f9;
+  }
+  
+  .store-card h3 {
+    margin: 0 0 8px;
+  }
+  
+  .store-card p {
+    margin: 4px 0;
+  }
+  
+  .store-card button {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .store-card button:hover {
+    background-color: #0056b3;
+  }
+  
+  .rating-form {
+    margin-top: 30px;
+    padding: 16px;
+    border-top: 2px solid #eee;
+  }
+  
+  .rating-form input {
+    padding: 8px;
+    width: 60px;
+    margin-right: 12px;
+  }
+  
+  .rating-form button {
+    padding: 8px 16px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  
