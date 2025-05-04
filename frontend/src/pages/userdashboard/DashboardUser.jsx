@@ -1,57 +1,80 @@
-import { useEffect, useState } from 'react';
-import './DashboardUser.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../auth/AuthContext";
 
-const DashboardUser = () => {
+export default function UserDashboard() {
+  const { token } = useAuth();
   const [stores, setStores] = useState([]);
-  const [selectedStore, setSelectedStore] = useState(null);
-  const [rating, setRating] = useState(0);
+  const [ratingInputs, setRatingInputs] = useState({});
 
   useEffect(() => {
-    // Replace with real API call
-    setStores([
-      { id: 1, name: 'Alpha Mart', email: 'alpha@store.com', address: 'New York', averageRating: 4.2 },
-      { id: 2, name: 'Beta Store', email: 'beta@store.com', address: 'LA', averageRating: 3.8 },
-    ]);
+    fetchStores();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (selectedStore && rating > 0 && rating <= 5) {
-      alert(`Rating ${rating} submitted for store ID ${selectedStore}`);
-      // POST to backend here
+  const fetchStores = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/stores", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStores(res.data);
+    } catch (err) {
+      console.error("Fetch stores error:", err);
+    }
+  };
+
+  const handleRatingSubmit = async (storeId) => {
+    const rating = ratingInputs[storeId];
+    if (!rating || rating < 1 || rating > 5) {
+      alert("Rating must be between 1 and 5");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://localhost:5000/api/stores/${storeId}/rate`,
+        { rating },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Rating submitted!");
+      fetchStores(); // Refresh store ratings
+    } catch (err) {
+      console.error("Submit rating error:", err);
     }
   };
 
   return (
-    <div className="user-dashboard">
-      <h1>Welcome, User!</h1>
-      <div className="store-list">
-        {stores.map((store) => (
-          <div key={store.id} className="store-card">
-            <h3>{store.name}</h3>
-            <p>Email: {store.email}</p>
-            <p>Address: {store.address}</p>
-            <p>Avg. Rating: {store.averageRating}</p>
-            <button onClick={() => setSelectedStore(store.id)}>Rate This Store</button>
-          </div>
-        ))}
-      </div>
-
-      {selectedStore && (
-        <form className="rating-form" onSubmit={handleSubmit}>
-          <h2>Submit Rating for Store #{selectedStore}</h2>
-          <input
-            type="number"
-            min="1"
-            max="5"
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-          />
-          <button type="submit">Submit Rating</button>
-        </form>
-      )}
+    <div style={{ padding: "20px" }}>
+      <h1>Store Ratings</h1>
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>Store</th><th>Email</th><th>Address</th><th>Rating</th><th>Rate Store</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stores.map((store) => (
+            <tr key={store.id}>
+              <td>{store.name}</td>
+              <td>{store.email}</td>
+              <td>{store.address}</td>
+              <td>{store.rating?.toFixed(1) || "No ratings"}</td>
+              <td>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  value={ratingInputs[store.id] || ""}
+                  onChange={(e) =>
+                    setRatingInputs({ ...ratingInputs, [store.id]: e.target.value })
+                  }
+                  style={{ width: "60px" }}
+                />
+                <button onClick={() => handleRatingSubmit(store.id)}>Submit</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-};
-
-export default DashboardUser;
+}

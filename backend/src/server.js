@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const storeRoutes = require('./routes/storeRoutes.js');
 const ratingRoutes = require('./routes/ratingRoutes.js');
+const ownerRoutes = require('./routes/ownerRoutes.js');
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', storeRoutes);
 app.use('/api', ratingRoutes);
+app.use('/api', ownerRoutes);
 
 sequelize.sync().then(() => {
   app.listen(5000, () => {

@@ -1,15 +1,13 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // should come from login response
-
-  const login = (userData) => setUser(userData);
-  const logout = () => setUser(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, token, setToken }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,24 +1,23 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthContext';
-import ProtectedRoute from './auth/ProtectedRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import DashboardAdmin from './pages/DashboardAdmin';
-import DashboardUser from './pages/DashboardUser';
-import DashboardOwner from './pages/DashboardOwner';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./component/auth/Login";
+import Register from "./component/auth/Register";
+import AdminDashboard from "./pages/DashboardAdmin";
+import UserDashboard from "./pages/userdashboard/DashboardUser";
+import { AuthProvider } from "./auth/AuthContext";
+import StoreOwnerDashboard from "./component/storeOwner/StoreOwnerDashboard";
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<ProtectedRoute role="admin"><DashboardAdmin /></ProtectedRoute>} />
-          <Route path="/user" element={<ProtectedRoute role="user"><DashboardUser /></ProtectedRoute>} />
-          <Route path="/owner" element={<ProtectedRoute role="owner"><DashboardOwner /></ProtectedRoute>} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/user" element={<UserDashboard />} />
+          <Route path="/owner" element={<StoreOwnerDashboard/>}/>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
 }
